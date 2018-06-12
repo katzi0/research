@@ -10,7 +10,6 @@ import 'rxjs-compat/add/operator/withLatestFrom';
 import { IMapState } from '../../interfaces/map.interfaces';
 
 
-
 @Component({
   selector: 'research-entities',
   templateUrl: './entities.component.html',
@@ -23,12 +22,13 @@ export class EntitiesComponent implements OnDestroy {
   mockDataExample$: Subject<AcNotification> = new Subject<AcNotification>();
 
 
-
-
   constructor(private store: Store<IMapState>) {
     setTimeout(() => {
       this.testDataSubscription = this.entities$.subscribe(x => {
-        x.forEach(y => this.mockDataExample$.next(y));
+        x.forEach(y => {
+          this.mockDataExample$.next(y);
+          console.log(y);
+        });
       });
     }, 0);
   }

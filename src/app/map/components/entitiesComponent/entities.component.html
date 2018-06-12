@@ -1,5 +1,5 @@
 <ac-layer acFor="let plane of mockDataExample$" [context]="this">
-  <ac-billboard-desc  props="{
+  <ac-billboard-desc props="{
                     image: plane.image,
                     position: plane.bbPosition
                   }">
@@ -9,9 +9,22 @@
                   text: plane.name
           }">
   </ac-label-desc>
+  <ac-point-desc props="{
+    position: plane.pointPosition,
+    color: plane.color,
+    pixelSize: plane.pixelSize
+  }">
+  </ac-point-desc>
+  <ac-polygon-desc props="{
+    hierarchy: plane.hierarchy,
+    extrudedHeight: plane.extrudedHeight,
+    material: plane.material,
+    closeTop: plane.closeTop,
+    closeBottom: plane.closeBottom
+  }"></ac-polygon-desc>
+  <ac-polyline-desc props="{
+    positions: plane.positions,
+    width: plane.width,
+    material: plane.material
+  }"></ac-polyline-desc>
 </ac-layer>
-
-
-<div>
-  {{(books$ | async)}}
-</div>
