@@ -10,10 +10,10 @@ export function MapReducer(state = mapInitState, action: MapActions | any): IMap
         entities: newEntities
       };
     case MapActionTypes.DELETE:
-      const deletedEntities = [];
-      const entities = action.payload;
-      entities.forEach(entity => deletedEntities.push(entity));
-      deletedEntities.forEach(entity => entity.actionType = 1);
+         const deletedEntities = [];
+          const entities = state.entities;
+         entities.forEach(entity => deletedEntities.push(entity));
+         deletedEntities.forEach(entity => entity[0].actionType = 1);
       return{
         entities: deletedEntities
       };

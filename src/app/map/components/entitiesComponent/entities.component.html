@@ -1,18 +1,20 @@
 <ac-layer acFor="let plane of mockDataExample$" [context]="this">
   <ac-billboard-desc props="{
                     image: plane.image,
-                    position: plane.bbPosition
+                    position: plane.bbPosition,
+                    distanceDisplayCondition: plane.distanceDisplayCondition
                   }">
   </ac-billboard-desc>
-  <ac-label-desc props="{
-                  position: plane.bbPosition,
-                  text: plane.name
-          }">
-  </ac-label-desc>
+  <!--<ac-label-desc props="{-->
+                  <!--position: plane.bbPosition,-->
+                  <!--text: plane.name-->
+          <!--}">-->
+  <!--</ac-label-desc>-->
   <ac-point-desc props="{
     position: plane.pointPosition,
     color: plane.color,
-    pixelSize: plane.pixelSize
+    pixelSize: plane.pixelSize,
+    distanceDisplayCondition: plane.distanceDisplayCondition
   }">
   </ac-point-desc>
   <ac-polygon-desc props="{

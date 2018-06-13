@@ -26,8 +26,12 @@ export class EntitiesComponent implements OnDestroy {
     setTimeout(() => {
       this.testDataSubscription = this.entities$.subscribe(x => {
         x.forEach(y => {
-          this.mockDataExample$.next(y);
-          console.log(y);
+          if (!Array.isArray(y)){
+            this.mockDataExample$.next(y);
+          } else{
+            console.log(y[0]);
+            this.mockDataExample$.next(y[0]);
+          }
         });
       });
     }, 0);

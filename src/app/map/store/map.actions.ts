@@ -49,7 +49,7 @@ export class DeleteAction implements Action {
    * @param {string} delete entities data
    */
 
-  constructor(public payload: AcNotification[]) {
+  constructor() {
   }
 }
 
