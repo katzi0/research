@@ -6,7 +6,7 @@ import {  AcNotification, ActionType } from 'angular-cesium';
 import { Guid } from 'guid-typescript';
 import { Store } from '@ngrx/store';
 import { DeleteAction, LoadAction } from '../../store/map.actions';
-import { EntityEnum, MiskEntity } from '../../interfaces/entity.inteface';
+import { EntityEnum, MiscEntity } from '../../interfaces/entity.inteface';
 import { MapService } from '../../services/map.service';
 
 
@@ -18,9 +18,6 @@ import { MapService } from '../../services/map.service';
 })
 
 export class MapComponent {
-  public id: Guid;
-
-  entitiesArr: AcNotification[] = [];
 
   dictionary = {
     /* 'point': MockPoints */
@@ -42,7 +39,7 @@ export class MapComponent {
          { point?: Point, billboard?: Billbo, polygon?: Polygon ],
        ]
     */
-      .map((entities: MiskEntity[]) => entities.map((entity) => this.getMockData(entity)))
+      .map((entities: MiscEntity[]) => entities.map((entity) => this.getMockData(entity)))
       /*
          [
            [{point?}, {billboard?}, {polygon?}],
@@ -55,7 +52,15 @@ export class MapComponent {
       });
   }
 
-  getMockData(entity: MiskEntity): any[] {
+  getMockData(entity: MiscEntity): AcNotification {
+    return {
+      actionType: ActionType.ADD_UPDATE,
+      id: this.generateId(),
+      entity: this.mapService.fillEntityData(EntityEnum[Object.keys(entity)[0]], entity)
+    };
+  }
+
+  getMockDataOld(entity: MiscEntity): any[] {
     return Object.keys(entity)
       .filter((key: EntityEnum) => Object.values(EntityEnum).includes(key))
       .map((key: EntityEnum) => ({
@@ -66,8 +71,8 @@ export class MapComponent {
   }
 
   generateId(): any {
-    this.id = Guid.create();
-    return this.id;
+    const id = Guid.create();
+    return id;
   }
 
   removeData() {

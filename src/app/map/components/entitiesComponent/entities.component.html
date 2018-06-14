@@ -1,8 +1,9 @@
-<ac-layer acFor="let plane of mockDataExample$" [context]="this">
+<ac-layer acFor="let plane of largeAmountEntities$" [context]="this">
   <ac-billboard-desc props="{
                     image: plane.image,
                     position: plane.bbPosition,
-                    distanceDisplayCondition: plane.distanceDisplayCondition
+                    distanceDisplayCondition: plane.distanceDisplayConditionBb,
+                    scale: plane.scale
                   }">
   </ac-billboard-desc>
   <!--<ac-label-desc props="{-->
@@ -14,19 +15,19 @@
     position: plane.pointPosition,
     color: plane.color,
     pixelSize: plane.pixelSize,
-    distanceDisplayCondition: plane.distanceDisplayCondition
+    distanceDisplayCondition: plane.distanceDisplayConditionPoint
   }">
   </ac-point-desc>
   <ac-polygon-desc props="{
     hierarchy: plane.hierarchy,
     extrudedHeight: plane.extrudedHeight,
-    material: plane.material,
+    material: plane.materialPolygon,
     closeTop: plane.closeTop,
     closeBottom: plane.closeBottom
   }"></ac-polygon-desc>
   <ac-polyline-desc props="{
     positions: plane.positions,
     width: plane.width,
-    material: plane.material
+    material: plane.materialPolyline
   }"></ac-polyline-desc>
 </ac-layer>

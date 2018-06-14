@@ -13,7 +13,7 @@ export function MapReducer(state = mapInitState, action: MapActions | any): IMap
          const deletedEntities = [];
           const entities = state.entities;
          entities.forEach(entity => deletedEntities.push(entity));
-         deletedEntities.forEach(entity => entity[0].actionType = 1);
+         deletedEntities.forEach(entity => entity.actionType = 1);
       return{
         entities: deletedEntities
       };
