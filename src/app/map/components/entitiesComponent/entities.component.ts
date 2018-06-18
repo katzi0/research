@@ -1,7 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
-import { AcNotification, ActionType } from 'angular-cesium';
-import { entitiesSelector } from '../../store/map.selectors';
+import {
+  AcLayerComponent,
+  AcNotification,
+  ActionType,
+  CesiumEvent,
+  CesiumService,
+  MapEventsManagerService,
+  PickOptions
+} from 'angular-cesium';
+import { entitiesSelector, showPointsSelector } from '../../store/map.selectors';
 import { Store } from '@ngrx/store';
 import 'rxjs-compat/add/operator/filter';
 import 'rxjs-compat/add/operator/map';
@@ -14,7 +22,7 @@ import { Observable } from 'rxjs/Observable';
 import { Guid } from 'guid-typescript';
 import { LoadAction } from '../../store/map.actions';
 import { MapService } from '../../services/map.service';
-
+import { IconsSvg } from '../../interfaces/iconsSvg';
 
 @Component({
   selector: 'research-entities',
@@ -23,11 +31,13 @@ import { MapService } from '../../services/map.service';
   providers: [MapService]
 })
 export class EntitiesComponent implements OnInit, OnDestroy {
+  @ViewChild(AcLayerComponent) layer: AcLayerComponent;
   testDataSubscription: Subscription;
   entities$ = this.store.select(entitiesSelector);
+  showPoint$ = this.store.select(showPointsSelector);
+  lastPickedEntity;
+  showPoints: Boolean = false;
 
-  mockDataExample$: Subject<AcNotification> = new Subject<AcNotification>();
-  entitiesType: EntitesType = EntitesType.ALL;
   largeAmountEntities$: Subject<AcNotification> = new Subject<AcNotification>();
 
   dictionary = {
@@ -40,57 +50,76 @@ export class EntitiesComponent implements OnInit, OnDestroy {
   };
 
 
-  constructor(private store: Store<IMapState>, private mapService: MapService) {
+  constructor(private store: Store<IMapState>, private mapService: MapService, private mapEventsManager: MapEventsManagerService) {
     setTimeout(() => {
-      this.testDispatch(EntityEnum.misc).subscribe(parsedEntities => {
-        this.store.dispatch(new LoadAction(parsedEntities));
+      this.dispatchFlights(EntityEnum.misc).subscribe(parsedEntities => {
+          this.store.dispatch(new LoadAction(parsedEntities));
         }
       );
     }, 0);
     this.entities$.subscribe(entities => entities.forEach(entity => {
       this.largeAmountEntities$.next(entity);
-    }))
+    }));
+
+    this.showPoint$.subscribe(x => this.showPoints = x);
   }
 
-
-  testDispatch(entityType = EntityEnum.misc): any {
+  dispatchFlights(entityType = EntityEnum.misc): any {
     return Observable.of(this.dictionary[entityType])
       .map((entities: MiscEntity[]) => entities.map((entity) => this.getMockData(entity)));
   }
 
   getMockData(entity: MiscEntity): AcNotification {
+    const guid = Guid.create();
+    const id = guid.toString();
     return {
       actionType: ActionType.ADD_UPDATE,
-      id: this.generateId(),
-      entity: this.mapService.fillEntityData(EntityEnum[Object.keys(entity)[0]], entity)
+      id: id,
+      entity: this.mapService.fillEntityData(EntityEnum[Object.keys(entity)[0]], entity, id)
     };
   }
 
-  generateId(): any {
-    const id = Guid.create();
-    return id;
-  }
-
-
   ngOnInit() {
-    // setTimeout(() => {
-    //   this.testDataSubscription = this.entities$.subscribe(x => {
-    //     x.forEach(y => {
-    //       if (!Array.isArray(y)) {
-    //         this.mockDataExample$.next(y);
-    //       } else {
-    //         this.mockDataExample$.next(y[0]);
-    //       }
-    //     });
-    //   });
-    // }, 0);
+    const mouseOverObservable = this.mapEventsManager.register({
+      event: CesiumEvent.LEFT_CLICK,
+      pick: PickOptions.PICK_FIRST,
+      priority: 2
+
+    });
+    // Change color on hover
+    mouseOverObservable.subscribe((event) => {
+      const track = event.entities !== null ? event.entities[0] : null;
+      if (this.lastPickedEntity && (!track || track.id !== this.lastPickedEntity.id)) {
+        this.lastPickedEntity.picked = false;
+        this.layer.update(this.lastPickedEntity, this.lastPickedEntity.id);
+      }
+      if (track && (!this.lastPickedEntity || track.id !== this.lastPickedEntity.id)) {
+        track.picked = true;
+        this.layer.update(track, track.id);
+      }
+      this.lastPickedEntity = track;
+    });
   }
 
   ngOnDestroy() {
     this.testDataSubscription.unsubscribe();
   }
 
-  displayLargeAmount() {
-    this.entitiesType = EntitesType.SIMULATED_ENTITIES;
+  isEntityPicked(entity: any) {
+    console.log('yay');
+    if (entity.picked) {
+      return Cesium.Color.YELLOW;
+    } else{
+      return Cesium.Color.BLACK;
+    }
   }
+
+  enlargedEntity(entity: any) {
+    if (entity.picked) {
+      return 0.3;
+    } else{
+      return 0.1;
+    }
+  }
+
 }

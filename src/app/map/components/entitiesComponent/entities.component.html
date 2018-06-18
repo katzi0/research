@@ -1,23 +1,24 @@
-<ac-layer acFor="let plane of largeAmountEntities$" [context]="this">
-  <ac-billboard-desc props="{
+<ac-layer acFor="let plane of largeAmountEntities$" [context]="this" [store]="true">
+  <ac-billboard-primitive-desc  props="{
                     image: plane.image,
                     position: plane.bbPosition,
                     distanceDisplayCondition: plane.distanceDisplayConditionBb,
+                    color: isEntityPicked(plane),
                     scale: plane.scale
                   }">
-  </ac-billboard-desc>
+  </ac-billboard-primitive-desc>
   <!--<ac-label-desc props="{-->
-                  <!--position: plane.bbPosition,-->
-                  <!--text: plane.name-->
-          <!--}">-->
+  <!--position: plane.bbPosition,-->
+  <!--text: plane.name-->
+  <!--}">-->
   <!--</ac-label-desc>-->
-  <ac-point-desc props="{
+  <ac-point-primitive-desc  props="{
     position: plane.pointPosition,
-    color: plane.color,
+   color: isEntityPicked(plane),
     pixelSize: plane.pixelSize,
     distanceDisplayCondition: plane.distanceDisplayConditionPoint
   }">
-  </ac-point-desc>
+  </ac-point-primitive-desc>
   <ac-polygon-desc props="{
     hierarchy: plane.hierarchy,
     extrudedHeight: plane.extrudedHeight,

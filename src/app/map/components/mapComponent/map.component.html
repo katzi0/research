@@ -1,12 +1,24 @@
 <ac-map>
-  <research-entities ></research-entities>
+  <ac-map-layer-provider [provider]="MapLayerProviderOptions.MapBox"
+                         [options]="{
+                                url : 'http://www.earthenterprise.org/3d/flatfile',
+                                layer : 'AMSR2_Snow_Water_Equivalent',
+                                style : 'default',
+                                tileMatrixSetID : '2km',
+                                maximumLevel : 5,
+                                format : 'image/png',
+                                clock: clock,
+                                times: times
+                            }">
+  </ac-map-layer-provider>
+  <research-entities></research-entities>
 </ac-map>
-<button (click)="testDispatch('billboard')">dispatch billboard test</button>
-<button (click)="testDispatch('point')">dispatch point test</button>
-<button (click)="testDispatch('polygon')">dispatch polygon test</button>
-<button (click)="testDispatch('polyline')">dispatch polyline test</button>
-<button (click)="testDispatch('misc')">dispatch misc test</button>
-
+<button (click)="dispatchFlights('billboard')">dispatch billboard test</button>
+<button (click)="dispatchFlights('point')">dispatch point test</button>
+<button (click)="dispatchFlights('polygon')">dispatch polygon test</button>
+<button (click)="dispatchFlights('polyline')">dispatch polyline test</button>
+<button (click)="dispatchFlights('misc')">dispatch misc test</button>
+<button (click)="toggleShowPoints()">toggle Show Points</button>
 
 
 <button (click)="removeData()">remove Data</button>

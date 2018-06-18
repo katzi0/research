@@ -2,12 +2,14 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs/observable';
 import { MockBb, MockPointBb, MockPoints, MockPointsLarge, MockPolygon, MockPolyline } from './mockData';
 import { IMapState } from '../../interfaces/map.interfaces';
-import {  AcNotification, ActionType } from 'angular-cesium';
+import { AcNotification, ActionType, MapLayerProviderOptions } from 'angular-cesium';
 import { Guid } from 'guid-typescript';
 import { Store } from '@ngrx/store';
-import { DeleteAction, LoadAction } from '../../store/map.actions';
+import { DeleteAction, LoadAction, ShowPointsAction } from '../../store/map.actions';
 import { EntityEnum, MiscEntity } from '../../interfaces/entity.inteface';
 import { MapService } from '../../services/map.service';
+import { showPointsSelector } from '../../store/map.selectors';
+
 
 
 @Component({
@@ -18,6 +20,9 @@ import { MapService } from '../../services/map.service';
 })
 
 export class MapComponent {
+  isShowPoint$ = this.store.select(showPointsSelector);
+  isShowPoint:Boolean;
+  MapLayerProviderOptions = MapLayerProviderOptions;
 
   dictionary = {
     /* 'point': MockPoints */
@@ -29,9 +34,13 @@ export class MapComponent {
   };
 
   constructor(private store: Store<IMapState>, private mapService: MapService) {
+    this.isShowPoint$.subscribe(res => {
+      this.isShowPoint = !res;
+      console.info(this.isShowPoint);
+    })
   }
 
-  testDispatch(entityType = EntityEnum.misc): any {
+  dispatchFlights(entityType = EntityEnum.misc): any {
     return Observable.of(this.dictionary[entityType])
     /*
        [
@@ -53,10 +62,11 @@ export class MapComponent {
   }
 
   getMockData(entity: MiscEntity): AcNotification {
+    const id = this.generateId().value;
     return {
       actionType: ActionType.ADD_UPDATE,
-      id: this.generateId(),
-      entity: this.mapService.fillEntityData(EntityEnum[Object.keys(entity)[0]], entity)
+      id,
+      entity: this.mapService.fillEntityData(EntityEnum[Object.keys(entity)[0]], entity, id)
     };
   }
 
@@ -66,7 +76,7 @@ export class MapComponent {
       .map((key: EntityEnum) => ({
         actionType: ActionType.ADD_UPDATE,
         id: this.generateId(),
-        entity: this.mapService.fillEntityData(key, entity)
+        entity: this.mapService.fillEntityData(key, entity, this.generateId())
       }));
   }
 
@@ -79,4 +89,7 @@ export class MapComponent {
     this.store.dispatch(new DeleteAction());
   }
 
+  toggleShowPoints() {
+    this.store.dispatch(new ShowPointsAction(this.isShowPoint));
+  }
 }

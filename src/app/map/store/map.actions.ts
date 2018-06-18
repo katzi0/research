@@ -5,7 +5,8 @@ import { AcNotification } from 'angular-cesium';
 export enum MapActionTypes {
   TEST = 'TEST',
   LOAD = 'LOAD',
-  DELETE = 'DELETE'
+  DELETE = 'DELETE',
+  SHOW_POINTS = 'SHOW_POINTS'
 }
 
 
@@ -13,6 +14,7 @@ export type MapActions
   = TestAction
   | LoadAction
   | DeleteAction
+  | ShowPointsAction
   ;
 
 
@@ -50,6 +52,17 @@ export class DeleteAction implements Action {
    */
 
   constructor() {
+  }
+}
+
+export class ShowPointsAction implements Action {
+  type: string = MapActionTypes.SHOW_POINTS
+  /**
+   *
+   * @param {string} toggle hide/display points
+   */
+
+  constructor(public payload: Boolean){
   }
 }
 

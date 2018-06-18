@@ -58,5 +58,6 @@ export enum EntitesType {
 export const IconsArr = [
   'assets/icons/plane.svg',
   'assets/icons/car-black-side-silhouette.svg',
-  'assets/icons/delivery-truck.svg'
+  'assets/icons/delivery-truck.svg',
+  'assets/icons/fighter-jet.png'
 ];

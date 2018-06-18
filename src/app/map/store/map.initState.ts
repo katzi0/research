@@ -1,5 +1,5 @@
 import { IMapState } from '../interfaces/map.interfaces';
-import {  ActionType } from 'angular-cesium';
+import { ActionType } from 'angular-cesium';
 
 export const mapInitState: IMapState = {
   entities:
@@ -11,7 +11,9 @@ export const mapInitState: IMapState = {
         image: new Cesium.PinBuilder().fromText('?', Cesium.Color.BLACK, 48).toDataURL(),
         bbPosition: new Cesium.Cartesian3.fromDegrees(-55.1641667, 30.5522222)
       })
-    }]
+    }
+    ],
+  showPoints: false
 };
 
 

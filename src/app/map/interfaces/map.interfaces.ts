@@ -1,7 +1,8 @@
 import { AcEntity, AcNotification, Cartesian3 } from 'angular-cesium';
 
 export interface IMapState {
-  entities: AcNotification[]
+  entities: AcNotification[];
+  showPoints: Boolean;
 }
 
 export interface IMapEntity extends AcEntity {
